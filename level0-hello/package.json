@@ -1,0 +1,19 @@
+{
+  "name": "level0-hello",
+  "version": "1.0.0",
+  "description": "hello",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "testwin": ".\\node_modules\\.bin\\mocha test\\index.js",
+    "test": "node_modules/.bin/mocha test/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "chai": "^4.3.6",
+    "mocha": "^10.0.0"
+  }
+}
