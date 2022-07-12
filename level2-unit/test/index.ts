@@ -1,7 +1,8 @@
 import {Calculator, Operation} from '../src/Calculator';
 import {Webpage} from '../src/Webpage';
 import {expect} from 'chai';
-import { resolve } from 'dns';
+import * as ServerMock from "mock-http-server";
+var sinon = require("sinon")
 
 describe('Level 2 - Calculator', () =>
 {
@@ -72,8 +73,6 @@ describe('Level 2 - Calculator', () =>
 });
 
 describe('Level 2 - Webpage', () => {
-    var ServerMock = require("mock-http-server")
-    var sinon = require("sinon")
     var server = new ServerMock({ host: "localhost", port: 9000 });
     let webpage: Webpage;
 
@@ -101,17 +100,18 @@ describe('Level 2 - Webpage', () => {
         expect(await webpage.getWebpage("http://localhost:9000/resource")).to.equal(jsonMessage)
     });
 
-    it('should reject incorrect url in get request', async () => {
+    it('should reject incorrect url in get request', (done) => {
         // https://stackoverflow.com/questions/33756027/fail-a-test-with-chai-js
         // TODO(angelo): non so come gestire il fatto che la richiesta è async e devo
         // aspettare che venga rigettata, questo codice non funziona
-        // expect( async () => {
-        //     await webpage.getWebpage("randomdfasdafs")
-        // } ).to.throw( Error );
+        // await expect(webpage.getWebpage("randomdfasdafs"))( Error );
         // quindi utilizzo un codice simile a quanto sotto, non è la soluzione migliore
 
-        await webpage.getWebpage("randomdfasdafs")
-            .catch(err => expect(err).to.be.an('error'))
+        webpage.getWebpage("randomdfasdafs")
+        .catch(err => {
+            expect(err).to.be.an('error'); 
+            done();
+        })
     });
 
     it('saveWebpage should return correct path on correct url and path', async () => {
