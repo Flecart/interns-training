@@ -5,9 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Hello Bulma!</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <script src="./index.js"></script>
   </head>
   <body>
-  <section class="section">
+  <section class="section hero is-fullheight has-background-warning">
+
+
     <div class="container">
       <h1 class="title">
         Welcome to Electron 
@@ -18,29 +21,36 @@
       <div class="field is-grouped">
         <div class="field">
           <div class="control">
-            <input class="input" type="text" placeholder="ip-address">
+            <input id="host" class="input" type="text" placeholder="ip-address">
           </div>
         </div>
 
         <div class="field">
           <div class="control">
-            <input class="input" type="text" placeholder="port number">
+            <input id="port" class="input" type="number" placeholder="port number">
           </div>
         </div>
-
-        <p class="control">
-          <button class="button is-primary">
-            Submit
-          </button>
-        </p>
+        <div class="file">
+          <label class="file-label">
+            <input id="file_input" class="file-input" type="file" name="resume">
+            <span class="file-cta">
+              <span class="file-icon">
+                <i class="fas fa-upload"></i>
+              </span>
+              <span class="file-label">
+                Choose a file…
+              </span>
+            </span>
+          </label>
+        </div>
+        <input id="submit_button" class="button is-primary" type="submit" value="Submit"/>
       </div>
+
+
     </div>
     <div class="container">
-      <div>
-        <p class="subtitle">Server is listening on port <span> number </span></p>
-        <p class="help"> content received! </p>
-
-      </div>
+      <p class="subtitle">Server is listening on port <span id="listening_port"> number </span></p>
+      <p id="response" class="help"> waiting for content </p>
     </div>
   </section>
   </body>
