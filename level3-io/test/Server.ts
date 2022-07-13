@@ -68,7 +68,8 @@ describe('Server', () =>
 
     it('should setup all the dgram handlers', (done) =>
     {
-        let socket_spy = sandbox.spy(dgram.Socket.prototype, 'on');
+        let socket_spy = sandbox.spy(dgram.Socket.prototype, 'on') as 
+            sinon.SinonSpy<[event: string, listener: (...args: any[]) => void], dgram.Socket>;
 
         server.listen(() =>
         {
@@ -123,7 +124,8 @@ describe('Server', () =>
         let client1 = new Client(1, 'test');
         let client2 = new Client(2, 'test1');
 
-        let send_spy = sandbox.spy(dgram.Socket.prototype, 'send');
+        let send_spy = sandbox.spy(dgram.Socket.prototype, 'send') as unknown as
+            sinon.SinonSpy<[msg: string | Uint8Array, offset: number, length: number, port?: number, address?: string, callback?: (error: Error | null, bytes: number) => void], void>;
 
         server.listen(() =>
         {
@@ -141,7 +143,7 @@ describe('Server', () =>
                 return client1.send('Hello', 2).then(() =>
                 {
                     expect(send_spy.called).to.be.true;
-                    expect(send_spy.calledWithMatch(JSON.stringify(request), sinon.match.any, sinon.match.any, sinon.match.any, sinon.match.any, sinon.match.any)).to.be.true;
+                    expect(send_spy.calledWith(JSON.stringify(request), sinon.match.any, sinon.match.any, sinon.match.any, sinon.match.any, sinon.match.any)).to.be.true;
                 });
             }).then(() =>
             {
@@ -158,13 +160,14 @@ describe('Server', () =>
         });
     });
 
-    it('should correctly broadcast messages', (done) =>
+    it.only('should correctly broadcast messages', (done) =>
     {
         let client1 = new Client(1, 'test');
         let client2 = new Client(2, 'test1');
         let client3 = new Client(3, 'test2');
 
-        let send_spy = sandbox.spy(dgram.Socket.prototype, 'send');
+        let send_spy = sandbox.spy(dgram.Socket.prototype, 'send') as unknown as 
+            sinon.SinonSpy<[msg: string | Uint8Array, offset: number, length: number, port?: number, address?: string, callback?: (error: Error | null, bytes: number) => void], void>;
 
         server.listen(() =>
         {
@@ -172,12 +175,12 @@ describe('Server', () =>
             {
                 return client1.broadcast('Hello').then(() =>
                 {
-                    return new Promise((resolve) =>
+                    return new Promise<void>((resolve) =>
                     {
                         setTimeout(() =>
                         {
                             expect(send_spy.called).to.be.true;
-                            expect(send_spy.withArgs('Hello', sinon.match.any, sinon.match.any, sinon.match.any, sinon.match.any).calledTwice).to.be.true;
+                            expect(send_spy.withArgs('Hello', sinon.match.any, sinon.match.any, sinon.match.any, sinon.match.any).callCount).to.be.equal(2);
                             resolve();
                         }, 500);
                     });
